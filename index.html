@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RailBook - Online Train Ticket Reservation</title>
+  <link id="page-style" rel="stylesheet" href="home.css">
+</head>
+<body>
+  <header>
+    <h1>🚂 RailBook</h1>
+    <nav>
+      <button onclick="loadPage('home')">Home</button>
+      <button onclick="loadPage('booking')">Ticket Booking</button>
+      <button onclick="loadPage('pnr')">PNR Status</button>
+      <button onclick="loadPage('contact')">Contact</button>
+      <button onclick="loadPage('login')">Login</button>
+    </nav>
+  </header>
+
+  <!-- Ticket Status -->
+  <div id="ticket-status">
+    Available Tickets: <span id="available">10</span> |
+    Booked Tickets: <span id="booked">0</span>
+  </div>
+
+  <!-- Main Content -->
+  <div id="content">
+    <section class="hero">
+      <h2>Welcome to RailBook</h2>
+      <p>Book your train tickets easily and securely from home.</p>
+      <a href="#" onclick="loadPage('booking')">🚆 Book Now</a>
+      <a href="#" onclick="loadPage('pnr')">Check PNR</a>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+      <div class="container">
+        <h3>Why Choose RailBook?</h3>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h4>Instant Booking</h4>
+            <p>Book tickets in seconds with our fast booking system</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🔒</div>
+            <h4>Secure Payment</h4>
+            <p>100% secure payment gateway with multiple payment options</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">📱</div>
+            <h4>Mobile Friendly</h4>
+            <p>Book tickets on the go with our responsive design</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Cancel Ticket Section -->
+  <div class="cancel-section" id="cancel-section">
+    <h3>Cancel Ticket</h3>
+    <form onsubmit="return cancelTicket();">
+      <label>Number of Tickets to Cancel: 
+        <input type="number" id="cancel-count" min="1" value="1">
+      </label><br>
+      <button type="submit">Cancel Ticket</button>
+    </form>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 RailBook. All rights reserved.</p>
+  </footer>
+
+  <script>
+    let totalTickets = 10;
+    let bookedTickets = 0;
+    function updateTicketStatus() {
+      document.getElementById("available").innerText = totalTickets - bookedTickets;
+      document.getElementById("booked").innerText = bookedTickets;
+    }
+
+    function showCancelSection(show) {
+      const cancelSection = document.getElementById("cancel-section");
+      cancelSection.style.display = show ? "block" : "none";
+    }
+
+    function loadPage(page) {
+      const content = document.getElementById("content");
+      const style = document.getElementById("page-style");
+
+      if (page === "home") {
+        style.href = "home.css";
+        showCancelSection(true);
+        content.innerHTML = `
+          <section class="hero">
+            <h2>Welcome to RailBook</h2>
+            <p>Book your train tickets easily and securely from home.</p>
+            <a href="#" onclick="loadPage('booking')">🚆 Book Now</a>
+            <a href="#" onclick="loadPage('pnr')">Check PNR</a>
+          </section>
+
+          <section class="features">
+            <div class="container">
+              <h3>Why Choose RailBook?</h3>
+              <div class="features-grid">
+                <div class="feature-card">
+                  <div class="feature-icon">⚡</div>
+                  <h4>Instant Booking</h4>
+                  <p>Book tickets in seconds with our fast booking system</p>
+                </div>
+                <div class="feature-card">
+                  <div class="feature-icon">🔒</div>
+                  <h4>Secure Payment</h4>
+                  <p>100% secure payment gateway with multiple payment options</p>
+                </div>
+                <div class="feature-card">
+                  <div class="feature-icon">📱</div>
+                  <h4>Mobile Friendly</h4>
+                  <p>Book tickets on the go with our responsive design</p>
+                </div>
+              </div>
+            </div>
+          </section>
+        `;
+      } 
+      else if (page === "booking") {
+        style.href = "booking.css";
+        showCancelSection(false); 
+        content.innerHTML = `
+          <h2>Book Your Train Ticket</h2>
+          <form onsubmit="return bookTicket();">
+            <label>From: <input type="text" required></label><br>
+            <label>To: <input type="text" required></label><br>
+            <label>Date: <input type="date" required></label><br>
+            <label>Passengers: <input type="number" id="passengers" min="1" value="1"></label><br>
+            <button type="submit">Book Ticket</button>
+          </form>
+        `;
+      } 
+      else if (page === "pnr") {
+        style.href = "pnr.css";
+        showCancelSection(false); 
+        content.innerHTML = `
+          <h2>Check PNR Status</h2>
+          <label>Enter PNR: <input type="text" required></label><br>
+          <button>Check Status</button>
+        `;
+      } 
+      else if (page === "contact") {
+        style.href = "contact.css";
+        showCancelSection(false); 
+        content.innerHTML = `
+          <h2>Contact Us</h2>
+          <p>Email: support@trainreserve.com</p>
+          <p>Phone: +91-9876543210</p>
+        `;
+      } 
+      else if (page === "login") {
+        style.href = "login.css";
+        showCancelSection(false);
+        content.innerHTML = `
+          <h2>Login</h2>
+          <form>
+            <label>Username: <input type="text" required></label><br>
+            <label>Password: <input type="password" required></label><br>
+            <button type="submit">Login</button>
+          </form>
+        `;
+      }
+    }
+
+    function bookTicket() {
+      const passengers = parseInt(document.getElementById("passengers").value);
+      const available = totalTickets - bookedTickets;
+
+      if (passengers <= available) {
+        bookedTickets += passengers;
+        alert(`Successfully booked ${passengers} ticket(s)!`);
+        updateTicketStatus();
+      } else {
+        alert("Not enough tickets available!");
+      }
+      return false;
+    }
+
+    function cancelTicket() {
+      const cancelCount = parseInt(document.getElementById("cancel-count").value);
+      if (cancelCount <= bookedTickets) {
+        bookedTickets -= cancelCount;
+        alert(`Successfully canceled ${cancelCount} ticket(s)!`);
+        updateTicketStatus();
+      } else {
+        alert("You cannot cancel more tickets than booked!");
+      }
+      return false;
+    }
+
+    updateTicketStatus();
+    showCancelSection(true);
+  </script>
+</body>
+</html>
